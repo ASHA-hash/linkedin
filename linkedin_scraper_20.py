@@ -219,14 +219,14 @@ def linkedIn_login(driver):
         email_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[1]/input"
         email_field = driver.find_element(By.XPATH, email_field_Path)
         # email_field.click()
-        email_field.send_keys("Your_email")
+        email_field.send_keys("19ao06@kcgcollege.com")
         time.sleep(2)
 
         print("Entering password...")
         password_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[2]/input"
         password_field = driver.find_element(By.XPATH, password_field_Path)
         # password_field.click()
-        password_field.send_keys("Your_Password")
+        password_field.send_keys("$.e$CbDrJFz6!nj")
         time.sleep(2)
 
         print("Clicking on the Sign In button...")
@@ -365,7 +365,7 @@ def profile_basic_data(driver, profile_url, sheet1, row):
             [date_of_extraction, linkedIn_url, profile_id, profile_id_yn, fullname, headline, location, num_connections,
              highlights, about])
         time.sleep(5)
-        workbook.save("profile_basic_data_7.xlsx")
+        workbook.save("profile_basic_data_8.xlsx")
     except Exception as e:
         print(f"Error during profile data extraction: {e}")
 
@@ -541,7 +541,7 @@ def activity(driver, profile_url, sheet2, row):
         print("JSON data written to sheet")
 
         # Save the workbook
-        workbook.save("profile_basic_data_7.xlsx")
+        workbook.save("profile_basic_data_8.xlsx")
         print("File saved successfully")
 
 
@@ -1044,7 +1044,7 @@ def experience(driver, profile_url, sheet3, row):
             print("JSON data written to sheet")
 
                 # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
 
 
         else:
@@ -1187,7 +1187,7 @@ def education(driver, profile_url, sheet4, row):
         print("JSON data written to sheet")
 
         # Save the workbook
-        workbook.save("profile_basic_data_7.xlsx")
+        workbook.save("profile_basic_data_8.xlsx")
         print("File saved successfully")
     except:
         print("No Education data are extracted")
@@ -1303,7 +1303,7 @@ def licenses_certifications(driver, profile_url, sheet5, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No licenses & certifications found.")
@@ -1425,7 +1425,7 @@ def projects(driver, profile_url, sheet6, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No projects found.")
@@ -1575,7 +1575,7 @@ def volunteering(driver, profile_url, sheet7, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No volunteerings found.")
@@ -1707,7 +1707,7 @@ def honors(driver, profile_url, sheet8, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No honors found.")
@@ -1825,7 +1825,7 @@ def skills(driver, profile_url, sheet9, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No Skills found.")
@@ -1970,15 +1970,17 @@ def recommendations_received(driver, profile_url, sheet10, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
 
             print("No recommendations_receiveds found.")
+            sheet10.cell(row=row, column=current_col, value=0)
 
     except NoSuchElementException as No_Such_Element_Found:
         print("Entered except 1 part...")
         print("No Recommendations Received data are extracted")
+        sheet10.cell(row=row, column=current_col, value=0)
 
 
 
@@ -2040,17 +2042,17 @@ def recommendations_given(driver, profile_url, sheet11, row):
             print("recommendations_Givens show_all_url found.")
         else:
             print("recommendations_Givens show_all_url not found.")
-
+        current_col = 3
         # If certificates are found, extract the data
         if recommendations_Givens_Count > 0:
-            current_col = 3  # Start from column B for the first certificate (Column A is for recommendations_Given_Count)
+              # Start from column B for the first certificate (Column A is for recommendations_Given_Count)
             data_list = []
             for i, cert in enumerate(recommendations_Given_list[:5]):
                 print(cert.text)
                 entry_text = cert.text
 
                 if "You haven't written any recommendations yet" in entry_text:
-                    sheet11.cell(row=row, col=current_col, value = 0)
+                    sheet11.cell(row=row, column=current_col, value = 0)
                     break
 
 
@@ -2104,7 +2106,6 @@ def recommendations_given(driver, profile_url, sheet11, row):
                     Rec_Given_Relation = ""
                     Rec_Given_Desc = ""
                     sheet11.cell(row=row, column=current_col, value=0)
-
                 Rec_Given_data = {
 
                     "Rec_Given__Count": i + 1,
@@ -2127,15 +2128,18 @@ def recommendations_given(driver, profile_url, sheet11, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No recommendations_Givens found.")
+            sheet11.cell(row=row, column=current_col, value=0)
+            
 
     except NoSuchElementException as No_Such_Element_Found:
 
         print("Entered except 1 part...")
         print("No Recommendations Given data are extracted")
+        sheet11.cell(row=row, column=current_col, value=0)
 
 
 
@@ -2242,7 +2246,7 @@ def feature_post(driver, profile_url, sheet12, row):
             print("JSON data written to sheet")
 
             # Save the workbook
-            workbook.save("profile_basic_data_7.xlsx")
+            workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
             print("No featured found.")
@@ -2280,54 +2284,54 @@ def main():
         # #
         # 
         # 
-        # print("Extracting experience data...")
-        # experience(driver, profile_url, sheet3, row)
+        print("Extracting experience data...")
+        experience(driver, profile_url, sheet3, row)
+        #
+        time.sleep(5)
         # #
-        # time.sleep(5)
-        # # #
-        # print("Extracting education data...")
-        # education(driver, profile_url, sheet4, row)
-        # time.sleep(5)
-        # 
-        # 
-        # print("Extracting License&Certifications details...")
-        # licenses_certifications(driver, profile_url, sheet5, row)
-        # time.sleep(5)
-        # 
-        # # #
-        # print("Extracting Projects details...")
-        # projects(driver, profile_url, sheet6, row)
-        # time.sleep(5)
+        print("Extracting education data...")
+        education(driver, profile_url, sheet4, row)
+        time.sleep(5)
+
+
+        print("Extracting License&Certifications details...")
+        licenses_certifications(driver, profile_url, sheet5, row)
+        time.sleep(5)
+
         # #
-        # #
-        # print("Extracting Volunteering details...")
-        # volunteering(driver, profile_url, sheet7, row)
-        # time.sleep(5)
-        # #
-        # #
-        # print("Extracting Honors details...")
-        # honors(driver, profile_url, sheet8, row)
-        # time.sleep(5)
-        # #
-        # #
-        # print("Extracting Skills details...")
-        # skills(driver, profile_url, sheet9, row)
-        # time.sleep(5)
+        print("Extracting Projects details...")
+        projects(driver, profile_url, sheet6, row)
+        time.sleep(5)
+        #
+        #
+        print("Extracting Volunteering details...")
+        volunteering(driver, profile_url, sheet7, row)
+        time.sleep(5)
+        #
+        #
+        print("Extracting Honors details...")
+        honors(driver, profile_url, sheet8, row)
+        time.sleep(5)
         # #
         # #
-        # print("Extracting Recommendations Received details...")
-        # recommendations_received(driver, profile_url, sheet10, row)
-        # time.sleep(5)
+        print("Extracting Skills details...")
+        skills(driver, profile_url, sheet9, row)
+        time.sleep(5)
+        #
+        #
+        print("Extracting Recommendations Received details...")
+        recommendations_received(driver, profile_url, sheet10, row)
+        time.sleep(5)
+        #
         # #
-        # # #
-        # print("Extracting Recommendations Given details...")
-        # recommendations_given(driver, profile_url, sheet11, row)
-        # time.sleep(5)
-        # 
-        # 
-        # print("Extracting featured post data...")
-        # feature_post(driver, profile_url, sheet12, row)
-        # time.sleep(5)
+        print("Extracting Recommendations Given details...")
+        recommendations_given(driver, profile_url, sheet11, row)
+        time.sleep(5)
+
+
+        print("Extracting featured post data...")
+        feature_post(driver, profile_url, sheet12, row)
+        time.sleep(5)
         #
         row = row + 1
 
