@@ -608,7 +608,7 @@ def experience(driver, profile_url, sheet3, row):
                     inner_list = exp.find_elements(By.CSS_SELECTOR,
                                                    '.pvs-list__paged-list-item.pvs-list__item--one-column')
                     # print(inner_list.text)
-                    print("hellrsedfsdo")
+                    
                     inner = exp.find_element(By.CSS_SELECTOR,
                                              '.pvs-list__paged-list-item.pvs-list__item--one-column')
 
@@ -746,7 +746,7 @@ def experience(driver, profile_url, sheet3, row):
 
                 except:
 
-                    print("Billionaire")
+                    
 
                     entry_text = exp.text
                     # Split the text into lines and store in a list
