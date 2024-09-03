@@ -219,14 +219,14 @@ def linkedIn_login(driver):
         email_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[1]/input"
         email_field = driver.find_element(By.XPATH, email_field_Path)
         # email_field.click()
-        email_field.send_keys("19ao06@kcgcollege.com")
+        email_field.send_keys(YOUR_EMAIL_ID)
         time.sleep(2)
 
         print("Entering password...")
         password_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[2]/input"
         password_field = driver.find_element(By.XPATH, password_field_Path)
         # password_field.click()
-        password_field.send_keys("$.e$CbDrJFz6!nj")
+        password_field.send_keys(YOUR_PASSWORD)
         time.sleep(2)
 
         print("Clicking on the Sign In button...")
