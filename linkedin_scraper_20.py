@@ -1761,6 +1761,7 @@ def recommendations_received(driver, profile_url, sheet10, row):
             print("recommendations_receiveds show_all_url found.")
         else:
             print("recommendations_receiveds show_all_url not found.")
+        current_col = 3
 
         # If certificates are found, extract the data
         if recommendations_receiveds_Count > 0:
