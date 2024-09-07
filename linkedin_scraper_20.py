@@ -37,7 +37,135 @@ print(f"Current number: {number}")
 def contains_number(s):
     return any(char.isdigit() for char in s)
 
+def scrape_company_data(url):
+    driver.get(url)
 
+    Exp_Org_Headline = ""
+    Exp_Org_Industry = ""
+    Exp_Org_Location = ""
+    Exp_Org_Followers = ""
+    Exp_Org_EmpSize = ""
+    Exp_Org_About = ""
+    Exp_Org_Founded = ""
+
+    # XPath for Organization Headline
+    try:
+        Exp_Org_Headline_css_selector = 'h1.org-top-card-summary__title'
+        Exp_Org_Headline = driver.find_element(By.CSS_SELECTOR, Exp_Org_Headline_css_selector).text
+    except NoSuchElementException:
+        Exp_Org_Headline = ""
+        print("Organization Headline not found")
+
+    try:
+        Exp_Org_Industry = driver.find_element(By.CSS_SELECTOR,
+                                               'div.org-top-card-summary-info-list__info-item').text
+    except NoSuchElementException:
+        Exp_Org_Industry = ""
+        print("Organization Industry not found")
+
+    try:
+        # Use the CSS selector to find the elements
+        element_1 = driver.find_elements(By.CSS_SELECTOR,
+                                         'div.inline-block > .org-top-card-summary-info-list__info-item')
+
+        if len(element_1) >= 3:
+            Exp_Org_Location = element_1[0].text
+            Exp_Org_Followers = element_1[1].text.split()[0]
+            Exp_Org_EmpSize = element_1[2].text.split()[0]
+        else:
+            print("Not enough elements found for Location, Followers, or Employee Size")
+    except NoSuchElementException:
+        Exp_Org_Location = ""
+        Exp_Org_Followers = ""
+        Exp_Org_EmpSize = ""
+        print("Organization details not found")
+
+    try:
+        see_more = driver.find_element(By.CSS_SELECTOR, 'a.lt-line-clamp__more')
+        see_more.click()
+    except:
+        pass
+
+    try:
+        Exp_Org_About = driver.find_element(By.CSS_SELECTOR, 'div.org-about-module__description').text
+    except:
+        Exp_Org_About = ""
+        print("Organization About section not found")
+
+    url = url + "about/"
+    try:
+        driver.get(url)
+        print("Entered about")
+        time.sleep(10)
+
+        # List of possible XPaths
+        xpaths = [
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[3]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[4]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[5]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[6]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[7]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[8]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[9]',
+            '/html/body/div[5]/div[3]/div/div[2]/div/div[2]/main/div[2]/div/div/div[1]/section/dl/dd[10]'
+        ]
+
+        Exp_Org_Founded = None
+
+        # Iterate over each XPath
+        for xpath in xpaths:
+            try:
+                # Try to find the element using the current XPath
+                Exp_Org_Founded = driver.find_element(By.XPATH, xpath).text
+                print(f"Found with XPath {xpath}: {Exp_Org_Founded}")
+                if Exp_Org_Founded:
+                    try:
+                        # Attempt to convert the text to an integer
+                        int_value = int(Exp_Org_Founded)
+                        Exp_Org_Founded = int_value
+                        print(f"Exp_Org_Founded as integer: {Exp_Org_Founded}")
+                        break  # Exit the loop if found
+                    except ValueError:
+                        # If conversion fails, store it as an empty string or custom message
+                        Exp_Org_Founded = "No Exp_Org_Founded"
+                        print("Conversion to integer failed, stored as 'No Exp_Org_Founded'")
+                else:
+                    Exp_Org_Founded = "No Exp_Org_Founded"
+                    print("Exp_Org_Founded not found, stored as 'No Exp_Org_Founded'")
+
+
+            except:
+                continue  # If not found, move to the next XPath
+
+
+
+    except Exception as e:
+        Exp_Org_Founded = ""
+        print(f"An error occurred")
+    # Printing the extracted values (for verification)
+    print(f"Organization Headline: {Exp_Org_Headline}")
+    print(f"Industry: {Exp_Org_Industry}")
+    print(f"Location: {Exp_Org_Location}")
+    print(f"Employee Size: {Exp_Org_EmpSize}")
+    print(f"Followers: {Exp_Org_Followers}")
+    print(f"About Section: {Exp_Org_About}")
+    print(f"Founded Date: {Exp_Org_Founded}")
+
+
+
+    # Store extracted values in a dictionary
+    company_data = {
+        "Exp_Org_Headline": Exp_Org_Headline,
+        "Exp_Org_Industry": Exp_Org_Industry,
+        "Exp_Org_Location": Exp_Org_Location,
+        "Exp_Org_EmpSize": Exp_Org_EmpSize,
+        "Exp_Org_Followers": Exp_Org_Followers,
+        "Exp_Org_About": Exp_Org_About,
+        "Exp_Org_Founded": Exp_Org_Founded,
+    }
+
+    # Return the extracted values
+    return company_data
 
 # from get_csv import profile_id
 
@@ -91,14 +219,14 @@ def linkedIn_login(driver):
         email_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[1]/input"
         email_field = driver.find_element(By.XPATH, email_field_Path)
         # email_field.click()
-        email_field.send_keys(YOUR_EMAIL_ID)
+        email_field.send_keys("19ao06@kcgcollege.com")
         time.sleep(2)
 
         print("Entering password...")
         password_field_Path = "/html/body/div/main/div[2]/div[1]/form/div[2]/input"
         password_field = driver.find_element(By.XPATH, password_field_Path)
         # password_field.click()
-        password_field.send_keys(YOUR_PASSWORD)
+        password_field.send_keys("$.e$CbDrJFz6!nj")
         time.sleep(2)
 
         print("Clicking on the Sign In button...")
@@ -310,7 +438,7 @@ def activity(driver, profile_url, sheet2, row):
         # Write data for each post in the second row
         current_col = 4  # Start from column C for post data
 
-        for i, post in enumerate(activity_post_list[:5]):
+        for i, post in enumerate(activity_post_list[:3]):
             try:
                 # Locate the container element
                 container = driver.find_element(By.CLASS_NAME, 'social-details-social-counts')
@@ -480,7 +608,7 @@ def experience(driver, profile_url, sheet3, row):
                     inner_list = exp.find_elements(By.CSS_SELECTOR,
                                                    '.pvs-list__paged-list-item.pvs-list__item--one-column')
                     # print(inner_list.text)
-                    
+                    print("hellrsedfsdo")
                     inner = exp.find_element(By.CSS_SELECTOR,
                                              '.pvs-list__paged-list-item.pvs-list__item--one-column')
 
@@ -618,7 +746,7 @@ def experience(driver, profile_url, sheet3, row):
 
                 except:
 
-                    
+                    print("Billionaire")
 
                     entry_text = exp.text
                     # Split the text into lines and store in a list
@@ -1713,6 +1841,7 @@ def skills(driver, profile_url, sheet9, row):
 
 def recommendations_received(driver, profile_url, sheet10, row):
     driver.get(profile_url)
+    time.sleep(5)
     Rec_Received_Count = ""
     Rec_Received1_Name = ""
     Rec_Received1_Title = ""
@@ -1762,10 +1891,9 @@ def recommendations_received(driver, profile_url, sheet10, row):
         else:
             print("recommendations_receiveds show_all_url not found.")
         current_col = 3
-
         # If certificates are found, extract the data
         if recommendations_receiveds_Count > 0:
-            current_col = 3  # Start from column B for the first certificate (Column A is for recommendations_received_Count)
+              # Start from column B for the first certificate (Column A is for recommendations_received_Count)
             data_list = []
             for i, cert in enumerate(recommendations_received_list[:5]):
                 # print(cert.text)
@@ -1846,14 +1974,15 @@ def recommendations_received(driver, profile_url, sheet10, row):
             workbook.save("profile_basic_data_8.xlsx")
             print("File saved successfully")
         else:
+            current_col =3
 
             print("No recommendations_receiveds found.")
             sheet10.cell(row=row, column=current_col, value=0)
 
+
     except NoSuchElementException as No_Such_Element_Found:
         print("Entered except 1 part...")
         print("No Recommendations Received data are extracted")
-        sheet10.cell(row=row, column=current_col, value=0)
 
 
 
@@ -2006,13 +2135,13 @@ def recommendations_given(driver, profile_url, sheet11, row):
         else:
             print("No recommendations_Givens found.")
             sheet11.cell(row=row, column=current_col, value=0)
-            
+
 
     except NoSuchElementException as No_Such_Element_Found:
 
         print("Entered except 1 part...")
         print("No Recommendations Given data are extracted")
-        sheet11.cell(row=row, column=current_col, value=0)
+
 
 
 
@@ -2155,8 +2284,8 @@ def main():
         activity(driver, profile_url, sheet2, row)
         time.sleep(5)
         # #
-        # 
-        # 
+        #
+        #
         print("Extracting experience data...")
         experience(driver, profile_url, sheet3, row)
         #
