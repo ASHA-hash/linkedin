@@ -1897,7 +1897,11 @@ def recommendations_received(driver, profile_url, sheet10, row):
             data_list = []
             for i, cert in enumerate(recommendations_received_list[:5]):
                 # print(cert.text)
+                if cert.text == '':
+                    sheet.cell(row=row, col=current_col, value=0)
+                    break
                 entry_text = cert.text
+
                 try:
                     # Split the entry text into lines and remove duplicates
                     lines = list(dict.fromkeys(entry_text.strip().split('\n')))
@@ -2051,6 +2055,9 @@ def recommendations_given(driver, profile_url, sheet11, row):
             data_list = []
             for i, cert in enumerate(recommendations_Given_list[:5]):
                 print(cert.text)
+                if cert.text == '':
+                    sheet11.cell(row=row, col=current_col, value=0)
+                    break
                 entry_text = cert.text
 
                 if "You haven't written any recommendations yet" in entry_text:
